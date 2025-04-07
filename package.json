@@ -1,0 +1,34 @@
+{
+  "name": "desafio_backend_siapesq",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node api/server.js",
+    "dev": "nodemon api/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LuanAssis01/desafio_beckend_siapesq.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LuanAssis01/desafio_beckend_siapesq/issues"
+  },
+  "homepage": "https://github.com/LuanAssis01/desafio_beckend_siapesq#readme",
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^5.1.0",
+    "nodemon": "^3.1.9",
+    "pg": "^8.14.1",
+    "pg-hstore": "^2.3.4",
+    "postgres": "^3.4.5",
+    "sequelize": "^6.37.7"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.6.2"
+  }
+}
