@@ -1,18 +1,19 @@
-import express from "express"
-import routes from "./src/router/urls.js"
+import express from 'express';
+import router from './src/router/index.js';
+import db from './src/models/index.js';
+import dotenv from 'dotenv';
 
-import "dotenv/config"
+dotenv.config();
 
-const app = express()
-const port = process.env.PORT
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.use(express.json())
-app.use(routes)
+app.use(express.json());
+app.use(router);
 
-app.listen(port, (error) => {
-    if(error){
-        console.error("Deu merda!")
-        return
-    }
-    console.log("Deu bom!")
-})
+// Sincroniza o banco de dados e inicia o servidor
+db.sequelize.sync().then(() => {
+    app.listen(PORT, () => {
+        console.log(`Servidor rodando na porta ${PORT}`);
+    });
+});
