@@ -9,7 +9,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use(router);
+app.use('/api', router);
 
 // Sincroniza o banco de dados e inicia o servidor
 db.sequelize.sync().then(() => {

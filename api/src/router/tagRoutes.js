@@ -1,12 +1,15 @@
-import express from "express"
-import tagController from "../controllers/tagController.js"
+// api/src/routes/tagRoutes.js
+import express from 'express';
+import tagController from '../controllers/tagController.js';
+import { authMiddleware } from '../auth/jwt.js';
 
-const routes = express.Router()
+const router = express.Router();
 
-//Rotas Tag
-routes.post("/tags", tagController.createTag)
-routes.get("/tags", tagController.getTag)
-routes.put("/tags:id", tagController.putTag)
-routes.delete("/tags:id", tagController.deleteTag)
+router.use(authMiddleware);
 
-export default routes;
+router.post('/', tagController.createTag);
+router.get('/', tagController.getTag);
+router.put('/:id', tagController.putTag);
+router.delete('/:id', tagController.deleteTag);
+
+export default router;

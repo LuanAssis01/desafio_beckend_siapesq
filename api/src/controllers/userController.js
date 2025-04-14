@@ -1,4 +1,5 @@
 import db from "../models/index.js";
+import bcrypt from 'bcrypt';
 import { authService } from '../auth/jwt.js';
 
 const User = db.User;
@@ -6,32 +7,45 @@ const User = db.User;
 const userController = {
     async createUser(req, res) {
         try {
-            const { first_name, last_name, email, username, password } = req.body;
-
-            const userAlreadyExists = await User.findOne({ where: { email } })
-
-            if (userAlreadyExists) {
-                return res.status(400).json({ message: "User already exists!" })
-            }
-
-            if (!first_name || !last_name || !email || !username || !password) {
-                return res.status(400).json({ message: "É obrigatório informar todos os campos acima!" })
-            }
-
-            const user = await User.create({
-                first_name,
-                last_name,
-                email,
-                username,
-                password
-            });
-
-            return res.status(201).json(user);
+          const { email, password, first_name, last_name, username } = req.body;
+    
+          // 1) Verifica se já existe
+          if (await User.findOne({ where: { email } })) {
+            return res.status(400).json({ message: 'Email já cadastrado' });
+          }
+    
+          // 2) Hash da senha
+          const hashedPassword = await bcrypt.hash(password, 10);
+    
+          // 3) Cria o usuário
+          const user = await User.create({
+            email,
+            password: hashedPassword,
+            first_name,
+            last_name,
+            username
+          });
+    
+          // 4) Gera o token via authService
+          const token = authService.generateToken(user);
+    
+          // 5) Retorna dados públicos + token
+          return res.status(201).json({
+            user: {
+              id: user.id,
+              email: user.email,
+              first_name: user.first_name,
+              last_name: user.last_name,
+              username: user.username
+            },
+            token
+          });
+    
         } catch (error) {
-            console.error(error);
-            return res.status(500).json({ message: "Erro ao criar usuário" });
+          console.error(error);
+          return res.status(500).json({ message: 'Erro ao criar usuário' });
         }
-    },
+      },
 
     async getUser(req, res) {
         try {
@@ -43,7 +57,7 @@ const userController = {
         }
     },
 
-    async putUser(req, res) {
+    async updateUser(req, res) {
         try {
             const { id } = req.params;
             const { first_name, last_name, email, username } = req.body;
@@ -106,11 +120,13 @@ const userController = {
             const { email, password } = req.body;
             const { token, user } = await authService.login(email, password);
             
-            return res.json({ 
+            return res.status(200).json({ 
                 token,
                 user: {
                     id: user.id,
-                    email: user.email
+                    email: user.email,
+                    first_name: user.first_name,
+                    last_name: user.last_name
                 }
             });
         } catch (error) {

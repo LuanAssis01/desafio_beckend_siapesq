@@ -1,12 +1,15 @@
-import express from "express"
-import itemTagController from "../controllers/itemTagController.js"
+// api/src/routes/itemTagRoutes.js
+import express from 'express';
+import itemTagController from '../controllers/itemTagController.js';
+import { authMiddleware } from '../auth/jwt.js';
 
-const routes = express.Router()
+const router = express.Router();
 
-// Rotas para ItemTag
-routes.post('/item-tag', itemTagController.addTagToItem);
-routes.get('/item/:item_id/tags', itemTagController.getItemTags);
-routes.get('/tag/:tag_id/items', itemTagController.getItemsByTag);
-routes.delete('/item-tag/:id', itemTagController.removeTagFromItem);
+router.use(authMiddleware);
 
-export default routes;
+router.post('/', itemTagController.addTagToItem);
+router.get('/item/:item_id/tags', itemTagController.getItemTags);
+router.get('/tag/:tag_id/items', itemTagController.getItemsByTag);
+router.delete('/:id', itemTagController.removeTagFromItem);
+
+export default router;

@@ -1,12 +1,15 @@
+// api/src/routes/itemRoutes.js
+import express from 'express';
+import itemController from '../controllers/itemController.js';
+import { authMiddleware } from '../auth/jwt.js';
 
-import itemController from "../controllers/itemController.js"
+const router = express.Router();
 
-const routes = express.Router()
+router.use(authMiddleware);
 
-// Rotas Item
-routes.post("/itens", itemController.createItem)
-routes.get("/itens", itemController.getItem)
-routes.put("/itens:id", itemController.putItem)
-routes.delete("/itens:id", itemController.deleteItem)
+router.post('/', itemController.createItem);
+router.get('/', itemController.getItem);
+router.put('/:id', itemController.putItem);
+router.delete('/:id', itemController.deleteItem);
 
-export default routes;
+export default router;

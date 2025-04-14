@@ -1,13 +1,15 @@
-import express from "express"
-import userController from "../controllers/userController.js"
+// api/src/routes/userRoutes.js
+import express from 'express';
+import userController from '../controllers/userController.js';
+import { authMiddleware } from '../auth/jwt.js';
 
-const routes = express.Router()
+const router = express.Router();
 
-//Rotas User
-routes.post("/users", userController.createUser)
-routes.get("/users", userController.getUser)
-routes.put("/users:id", userController.putUser)
-routes.delete("/users:id", userController.deleteUser)
-routes.post('/login', userController.login);
+// aplica JWT a todas as rotas abaixo
+router.use(authMiddleware);
 
-export default routes;
+router.get('/',    userController.getUser);
+router.put('/:id', userController.updateUser);
+router.delete('/:id', userController.deleteUser);
+
+export default router;

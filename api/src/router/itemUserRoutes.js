@@ -1,12 +1,15 @@
-import express from "express"
-import itemUserController from "../controllers/itemUserController.js"
+// api/src/routes/itemUserRoutes.js
+import express from 'express';
+import itemUserController from '../controllers/itemUserController.js';
+import { authMiddleware } from '../auth/jwt.js';
 
-const routes = express.Router()
+const router = express.Router();
 
-// Rotas para ItemUser
-routes.post('/item-user', itemUserController.createAssociation);
-routes.get('/user/:user_id/items', itemUserController.getUserItems);
-routes.put('/item-user/:id', itemUserController.updateAssociation);
-routes.delete('/item-user/:id', itemUserController.deleteAssociation);
+router.use(authMiddleware);
 
-export default routes;
+router.post('/', itemUserController.createAssociation);
+router.get('/user/:user_id/items', itemUserController.getUserItems);
+router.put('/:id', itemUserController.updateAssociation);
+router.delete('/:id', itemUserController.deleteAssociation);
+
+export default router;
